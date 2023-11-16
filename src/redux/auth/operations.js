@@ -1,50 +1,82 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ToasterNotify } from "components/Notify/Notify";
+import { toast } from "react-hot-toast";
 import axios from "axios";
+import { loadUser } from "../auth/sliceAuth/loadUser";
+import { useDispatch } from "react-redux";
+axios.defaults.baseURL = "localhost:3000";
 
-axios.defaults.baseURL = "https://api.miraplay.cloud/games/by_page";
-
-const setAuthHeader = (token) => {
-  axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-};
-
-const queryClient = useQueryClient();
-
-export const register = useMutation(
-  "register",
-  async (credentials) => {
-    const res = await axios.post(
-      `$(axios.defaults.baseURL)/register`,
-      credentials
-    );
-    setAuthHeader(res.data.token);
-    return res.data;
-  },
-  {
-    onError: (error) => {
-      ToasterNotify(error.response.data.message);
+async function signUp(email, password) {
+  const response = await fetch(`${axios.defaults.baseURL}/register`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-    onSuccess: () => {
-      ToasterNotify("AccountСreated");
-      queryClient.invalidateQueries("user"); // Приклад інвалідації кешу для оновлення даних користувача після реєстрації
-    },
-  }
-);
+    body: JSON.stringify({ email, password }),
+  });
+  if (!response.ok) toast.error("Failed on sign up request");
 
-export const logIn = useMutation(
-  "login",
-  async (credentials) => {
-    const res = await axios.post("/api/users/login", credentials);
-    setAuthHeader(res.data.token);
-    return res.data;
-  },
-  {
-    onError: (error) => {
-      ToasterNotify("Password or email is incorrect");
+  return await response.json();
+}
+
+export function useSignUp() {
+  const queryClient = useQueryClient();
+  const dispatch = useDispatch();
+
+  const { mutate: signUpMutation } = useMutation(
+    ({ email, password }) => signUp(email, password),
+    {
+      onSuccess: (data) => {
+        dispatch(
+          loadUser({
+            user: data.user,
+            token: data.token,
+          })
+        );
+        queryClient.setQueriesData("currentUser", data.user);
+      },
+      onError: (error) => {
+        toast.error("Ops.. Error on sign up. Try again!");
+      },
+    }
+  );
+
+  return signUpMutation;
+}
+
+//
+async function signIn(email, password) {
+  const response = await fetch(`${axios.defaults.baseURL}/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-    onSuccess: () => {
-      ToasterNotify("LoginSuccessful");
-      queryClient.invalidateQueries("user"); // Приклад інвалідації кешу для оновлення даних користувача після входу
-    },
-  }
-);
+    body: JSON.stringify({ email, password }),
+  });
+  if (!response.ok) toast.error("Failed on sign in request");
+
+  return await response.json();
+}
+
+export function useSignIn() {
+  const queryClient = useQueryClient();
+  const dispatch = useDispatch();
+  const { mutate: signInMutation } = useMutation(
+    ({ email, password }) => signIn(email, password),
+    {
+      onSuccess: (data) => {
+        dispatch(
+          loadUser({
+            user: data.user,
+            token: data.token,
+          })
+        );
+        queryClient.setQueriesData("currentUser", data.user);
+      },
+      onError: (error) => {
+        toast.error("Ops.. Error on sign in. Try again!");
+      },
+    }
+  );
+
+  return signInMutation;
+}

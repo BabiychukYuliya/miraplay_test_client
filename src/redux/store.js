@@ -11,17 +11,9 @@ import {
   REGISTER,
 } from "redux-persist";
 import { authReducer } from "./auth/sliceAuth";
+import gamesReducer from "./games/sliceGames";
 
-const middleware = [
-  ...getDefaultMiddleware({
-    serializableCheck: {
-      ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-    },
-  }),
-];
-
-// Persisting token field from auth slice to localstorage
-const authPersistConfig = {
+const persistConfig = {
   key: "auth",
   storage,
   whitelist: ["token"],
@@ -29,11 +21,14 @@ const authPersistConfig = {
 
 export const store = configureStore({
   reducer: {
-    auth: persistReducer(authPersistConfig, authReducer),
-    // games: gamesReducer,
+    auth: persistReducer(persistConfig, authReducer),
+    games: gamesReducer,
   },
-  middleware,
-  devTools: process.env.NODE_ENV === "development",
+  middleware: getDefaultMiddleware({
+    serializableCheck: {
+      ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+    },
+  }),
 });
 
 export const persistor = persistStore(store);
