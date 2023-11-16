@@ -13,7 +13,7 @@ async function signUp(email, password) {
     },
     body: JSON.stringify({ email, password }),
   });
-  if (!response.ok) toast.error("Failed on sign up request");
+  if (!response.ok) throw new Error("Failed on sign up request");
 
   return await response.json();
 }
@@ -52,7 +52,7 @@ async function signIn(email, password) {
     },
     body: JSON.stringify({ email, password }),
   });
-  if (!response.ok) toast.error("Failed on sign in request");
+  if (!response.ok) throw new Error("Failed on sign in request");
 
   return await response.json();
 }

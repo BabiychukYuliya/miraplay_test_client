@@ -1,4 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 const API_URL = "https://api.miraplay.cloud";
 
 const useGames = (
@@ -28,4 +30,39 @@ const useGames = (
   });
 };
 
-export default useGames;
+const genre = [
+  "ALL",
+  "FREE",
+  "MOBA",
+  "SHOOTERS",
+  "LAUNCHERS",
+  "MMORPG",
+  "STRATEGY",
+  "FIGHTING",
+  "RACING",
+  "SURVIVAL",
+  "ONLINE",
+];
+
+const Games = () => {
+  const games = useSelector((state) => state.games.games);
+  const gamesListLength = useSelector((state) => state.games.gamesListLength);
+  const [page, setPage] = useState(1);
+  const [genre, setGenre] = useState("ALL");
+
+  const dispatch = useDispatch();
+  return (
+    <div>
+      {games.length > 0 && (
+        <ul>
+          {games.map((game) => (
+            <li key={game._id}>
+              <img src={game.gameImage} alt={game.commonGameName} />
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
+export default Games;
