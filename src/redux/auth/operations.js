@@ -1,8 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import { loadUser } from "../auth/sliceAuth/loadUser";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 axios.defaults.baseURL = "localhost:3000";
 
 async function signUp(email, password) {
@@ -80,3 +80,39 @@ export function useSignIn() {
 
   return signInMutation;
 }
+//
+// async function logOut() {
+//   const { token } = useSelector((state) => state.auth);
+//   const response = await fetch(`${axios.defaults.baseURL}/logout`, {
+//     method: "POST",
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   });
+//   if (!response.ok) throw new Error("Failed on sign in request");
+
+//   return await response.json();
+// }
+//
+export const useCurrentUser = () => {
+  const { token } = useSelector((state) => state.auth);
+
+  return useQuery({
+    queryKey: ["currentUser"],
+    queryFn: async () => {
+      if (!token) {
+        return null;
+      }
+      const res = await fetch(`${axios.defaults.baseURL}/current`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!res.ok) {
+        throw new Error("Unable to fetch user");
+      }
+      return await res.json();
+    },
+  });
+};
