@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import axios from "axios";
-import { loadUser } from "../auth/sliceAuth/loadUser";
+import { loadUser } from "./sliceAuth";
 import { useDispatch, useSelector } from "react-redux";
-axios.defaults.baseURL = "localhost:3000";
+axios.defaults.baseURL = "http://localhost:3000";
 
 async function signUp(email, password) {
   const response = await fetch(`${axios.defaults.baseURL}/register`, {
@@ -40,7 +40,10 @@ export function useSignUp() {
     }
   );
 
-  return signUpMutation;
+  const signUpUser = async ({ email, password }) => {
+    return signUpMutation.mutateAsync({ email, password });
+  };
+  return signUpUser;
 }
 
 //
@@ -78,7 +81,10 @@ export function useSignIn() {
     }
   );
 
-  return signInMutation;
+  const signInUser = async ({ email, password }) => {
+    return signInMutation.mutateAsync({ email, password });
+  };
+  return signInUser;
 }
 //
 // async function logOut() {

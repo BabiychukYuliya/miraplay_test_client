@@ -1,15 +1,13 @@
 import { useState } from "react";
-// import { useDispatch } from "react-redux";
-
+import { useSignIn, useSignUp } from "../redux/auth/operations";
 import { toast, Toaster } from "react-hot-toast";
 
 export default function Login() {
-  // const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const [borderColorMailInpt, setBorderColorMailInpt] = useState("main");
-  const [borderColorPassInpt, setBorderColorPassInpt] = useState("main");
+  const [isSignUp, setIsSignUp] = useState(false);
+  const { signUpUser } = useSignUp();
+  const { signInUser } = useSignIn();
 
   const handleChange = ({ target: { name, value } }) => {
     switch (name) {
@@ -23,19 +21,14 @@ export default function Login() {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (email === "") {
-      setBorderColorMailInpt("fail");
-    }
-    if (password === "") {
-      setBorderColorPassInpt("fail");
-    }
+
     if (email === "" || password === "") {
       return toast.error("Fields cannot be empty.");
     }
-    if (email !== "" && password !== "") {
-      setBorderColorMailInpt("main");
-      setBorderColorPassInpt("main");
-      // dispatch(logIn({ email, password }));
+    if (isSignUp) {
+      signUpUser({ email, password });
+    } else {
+      signInUser({ email, password });
     }
   };
 
@@ -48,7 +41,6 @@ export default function Login() {
             type="email"
             name="email"
             value={email}
-            className={` ${borderColorMailInpt}`}
             placeholder="yuormail@miraplay.com"
             onChange={handleChange}
           ></input>
@@ -59,7 +51,6 @@ export default function Login() {
           type={password}
           name="password"
           value={password}
-          className={` ${borderColorPassInpt}`}
           placeholder="Ваш пароль"
           onChange={handleChange}
         ></input>
