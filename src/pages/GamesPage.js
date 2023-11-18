@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import loadGames from "../redux/games/sliceGames";
+import { loadGames } from "../redux/games/sliceGames";
 const API_URL = "https://api.miraplay.cloud";
 
 const useGames = (

@@ -3,7 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { authReducer } from "./auth/sliceAuth";
-import gamesReducer from "./games/sliceGames";
+import { gamesReducer } from "./games/sliceGames";
 
 const rootReducer = combineReducers({
   [authReducer.name]: authReducer.reducer,
