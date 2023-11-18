@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import axios from "axios";
@@ -122,3 +123,51 @@ export const useCurrentUser = () => {
     },
   });
 };
+// export const useRegister = () => {
+//   const queryClient = useQueryClient();
+//   const dispatch = useDispatch();
+//   const [registerErrorMessage, setRegisterErrorMessage] = useState(null);
+
+//   const registerMutation = useMutation({
+//     mutationFn: async ({ email, password }) => {
+//       const response = await fetch(`${axios.defaults.baseURL}/register`, {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({ email, password }),
+//       });
+
+//       if (!response.ok) {
+//         const errorData = await response.json();
+//         throw new Error(errorData.message);
+//       }
+
+//       return response.json();
+//     },
+//     onSuccess: (data) => {
+//       dispatch(
+//         loadUser({
+//           user: data.user,
+//           token: data.token,
+//         })
+//       );
+//       queryClient.setQueryData("currentUser", data.user);
+//     },
+//     onError: (error) => {
+//       setRegisterErrorMessage(error.message);
+//       console.error("Registration failed:", error.message);
+//     },
+//   });
+
+//   const registerUser = async ({ email, password }) => {
+//     return registerMutation.mutateAsync({ email, password });
+//   };
+
+//   return {
+//     registerUser,
+//     isLoadingRegister: registerMutation.isLoading,
+//     isErrorRegister: registerMutation.isError,
+//     registerErrorMessage,
+//   };
+// };

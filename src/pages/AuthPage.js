@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useSignIn, useSignUp } from "../redux/auth/operations";
+
 import { toast, Toaster } from "react-hot-toast";
+import { useSignUp, useSignIn } from "../redux/auth/operations";
 
 export default function Login() {
   const [email, setEmail] = useState("");

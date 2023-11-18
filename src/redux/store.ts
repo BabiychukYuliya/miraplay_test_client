@@ -6,8 +6,8 @@ import { authReducer } from "./auth/sliceAuth";
 import gamesReducer from "./games/sliceGames";
 
 const rootReducer = combineReducers({
-  auth: authReducer,
-  games: gamesReducer,
+  [authReducer.name]: authReducer.reducer,
+  [gamesReducer.name]: gamesReducer.reducer,
 });
 
 const persistConfig = {
@@ -20,7 +20,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 const store = configureStore({
   reducer: persistedReducer,
 });
-// export const persistor = persistStore(store, null, () => {console.log('Rehydrated')});
+
 const persistor = persistStore(store);
 
 export { store, persistor };
