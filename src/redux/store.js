@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import { createStore } from "redux";
+import { configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { authReducer } from "./auth/sliceAuth";
@@ -17,6 +17,10 @@ const persistConfig = {
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
-export const store = createStore(persistedReducer);
+const store = configureStore({
+  reducer: persistedReducer,
+});
 // export const persistor = persistStore(store, null, () => {console.log('Rehydrated')});
-export const persistor = persistStore(store);
+const persistor = persistStore(store);
+
+export { store, persistor };

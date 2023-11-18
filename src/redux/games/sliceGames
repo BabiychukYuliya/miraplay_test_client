@@ -8,7 +8,7 @@ const gamesSlice = createSlice({
   },
   reducers: {
     loadGames(state, action) {
-      state.games.push(...action.payload.games);
+      state.push(action.payload.games);
       state.gamesListLength = action.payload.gamesListLength;
     },
     resetGames(state) {
