@@ -1,16 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-  games: [],
-  gamesListLength: 0,
-};
-
 const gamesSlice = createSlice({
   name: "games",
-  initialState,
+  initialState: {
+    games: [],
+    gamesListLength: 0,
+  },
   reducers: {
     loadGames(state, action) {
-      state.push(action.payload.games);
+      state.games.push(action.payload.games);
       state.gamesListLength = action.payload.gamesListLength;
     },
     resetGames(state) {
@@ -19,5 +17,6 @@ const gamesSlice = createSlice({
     },
   },
 });
-export const gamesReducer = gamesSlice;
+
 export const { loadGames, resetGames } = gamesSlice.actions;
+export const gamesReducer = gamesSlice;

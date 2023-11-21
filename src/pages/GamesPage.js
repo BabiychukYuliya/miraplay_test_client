@@ -50,18 +50,22 @@ const Games = () => {
   const gamesListLength = useSelector((state) => state.games.gamesListLength);
   const [page, setPage] = useState(1);
   const [genre, setGenre] = useState("ALL");
+  const { data } = useGames();
+  console.log(data);
 
   const dispatch = useDispatch();
-
-  useEffect(() => dispatch(loadGames({ games })), [dispatch, games]);
-
+  useEffect(() => {
+    if (data) {
+      dispatch(loadGames(data));
+    }
+  }, [data, dispatch]);
   return (
     <div>
       {games.length > 0 && (
         <ul>
           {games.map((game) => (
             <li key={game._id}>
-              <img src={game.gameImage} alt={game.commonGameName} />
+              <img src={game} alt={game.commonGameName} />
             </li>
           ))}
         </ul>
@@ -69,7 +73,7 @@ const Games = () => {
     </div>
   );
 };
-// export default Games;
+export default Games;
 // function Games() {
 //   const games = useSelector((state) => state.games.games);
 //   const { isLoading, error, data } = useQuery(

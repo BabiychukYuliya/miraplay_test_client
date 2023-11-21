@@ -1,9 +1,11 @@
 import { combineReducers } from "redux";
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { authReducer } from "./auth/sliceAuth";
 import { gamesReducer } from "./games/sliceGames";
+import { setupListeners } from "@reduxjs/toolkit/query";
+// import { authApi } from "./auth/operations";
 
 const rootReducer = combineReducers({
   [authReducer.name]: authReducer.reducer,
@@ -19,8 +21,11 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 const store = configureStore({
   reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(authApi.middleware),
 });
-
+// export const persistor = persistStore(store, null, () => {console.log('Rehydrated')});
 const persistor = persistStore(store);
 
 export { store, persistor };
+setupListeners(store.dispatch);
