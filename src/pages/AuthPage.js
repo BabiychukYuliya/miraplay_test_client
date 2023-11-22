@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 // import { useSignUp, useSignIn } from "../redux/auth/operations";
-import { authApi } from "../redux/auth/operations.js";
+import { authApi } from "../redux/auth/operations.ts";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { loadUser } from "../redux/auth/sliceAuth.js";
+import { loadUser } from "../redux/auth/sliceAuth";
 
 export default function Login() {
   const [email, setEmail] = useState("");

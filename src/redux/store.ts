@@ -6,14 +6,6 @@ import { authReducer } from "./auth/sliceAuth";
 import { gamesReducer } from "./games/sliceGames";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { authApi } from "./auth/operations.ts";
-import {
-  FLUSH,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
-  REHYDRATE,
-} from "redux-persist";
 
 const rootReducer = combineReducers({
   [authReducer.name]: authReducer.reducer,
@@ -31,11 +23,8 @@ const store = configureStore({
   reducer: {
     authApi: persistedReducer,
   },
-  middleware: getDefaultMiddleware({
-    serializableCheck: {
-      ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-    },
-  }),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(authApi.middleware),
 });
 // export const persistor = persistStore(store, null, () => {console.log('Rehydrated')});
 const persistor = persistStore(store);
