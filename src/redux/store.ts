@@ -5,7 +5,15 @@ import storage from "redux-persist/lib/storage";
 import { authReducer } from "./auth/sliceAuth";
 import { gamesReducer } from "./games/sliceGames";
 import { setupListeners } from "@reduxjs/toolkit/query";
-// import { authApi } from "./auth/operations";
+import { authApi } from "./auth/operations.ts";
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+} from "redux-persist";
 
 const rootReducer = combineReducers({
   [authReducer.name]: authReducer.reducer,
@@ -20,9 +28,14 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 const store = configureStore({
-  reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(authApi.middleware),
+  reducer: {
+    authApi: persistedReducer,
+  },
+  middleware: getDefaultMiddleware({
+    serializableCheck: {
+      ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+    },
+  }),
 });
 // export const persistor = persistStore(store, null, () => {console.log('Rehydrated')});
 const persistor = persistStore(store);
