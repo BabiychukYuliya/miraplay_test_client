@@ -24,7 +24,9 @@ const store = configureStore({
     authApi: persistedReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(authApi.middleware),
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }).concat(authApi.middleware),
 });
 // export const persistor = persistStore(store, null, () => {console.log('Rehydrated')});
 const persistor = persistStore(store);

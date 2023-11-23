@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-// import { useSignUp, useSignIn } from "../redux/auth/operations";
 import { authApi } from "../redux/auth/operations.ts";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -38,9 +37,12 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (isSignUp) {
-      await registerUser({ email, password });
-    } else {
+    // if (isSignUp) {
+    //   await registerUser({ email, password });
+    // } else {
+    //   await loginUser({ email, password });
+    // }
+    if (email && password) {
       await loginUser({ email, password });
     }
   };
