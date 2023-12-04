@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { authReducer } from "./auth/sliceAuth";
@@ -20,13 +20,9 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 const store = configureStore({
-  reducer: {
-    authApi: persistedReducer,
-  },
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: false,
-    }).concat(authApi.middleware),
+    getDefaultMiddleware().concat(authApi.middleware),
 });
 // export const persistor = persistStore(store, null, () => {console.log('Rehydrated')});
 const persistor = persistStore(store);

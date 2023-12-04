@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
+// import { useSignUp, useSignIn } from "../redux/auth/operations";
 import { authApi } from "../redux/auth/operations.ts";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { loadUser } from "../redux/auth/sliceAuth";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -17,12 +16,13 @@ export default function Login() {
   const [
     registerUser,
     {
-      data: registerData,
-      isSuccess: isRegisterSuccess,
-      isError: isRegisterError,
+      data: loginDataRegister,
+      isSuccess: isLoginSuccessRegister,
+      isError: isLoginErrorRegister,
     },
   ] = authApi.useRegisterUserMutation();
-  const dispatch = useDispatch();
+  // const { signUpUser } = useSignUp();
+  // const { signInUser } = useSignIn();
 
   const handleChange = ({ target: { name, value } }) => {
     switch (name) {
@@ -37,26 +37,18 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // if (isSignUp) {
-    //   await registerUser({ email, password });
-    // } else {
-    //   await loginUser({ email, password });
-    // }
     if (email && password) {
-      await loginUser({ email, password });
+      !isSignUp
+        ? await loginUser({ email, password })
+        : await registerUser({ email, password });
+    } else {
+      toast.error("Please enter all required fields");
     }
   };
 
   useEffect(() => {
     if (isLoginSuccess) {
       toast.success("User logged in successfully");
-      dispatch(
-        loadUser({
-          email,
-          password,
-          token: loginData.token,
-        })
-      );
       navigate("/games");
     }
   }, [isLoginSuccess]);
